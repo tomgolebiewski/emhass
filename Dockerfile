@@ -63,7 +63,6 @@ RUN [[ "${TARGETARCH}" == "armv7" ]] && apt-get update && apt-get install libato
 
 #remove build only packages
 RUN apt-get purge -y --auto-remove \
-    git \
     gcc \
     patchelf \
     cmake \
@@ -111,6 +110,7 @@ COPY src/emhass/ /app/src/emhass/
 COPY src/emhass/templates/ /app/src/emhass/templates/
 COPY src/emhass/static/ /app/src/emhass/static/
 COPY src/emhass/static/img/ /app/src/emhass/static/img/
+COPY src/emhass/data/ /app/src/emhass/data/
 COPY data/opt_res_latest.csv /app/data/
 #add options.json, this otherwise would be generated via HA
 COPY options.json /app/
@@ -132,8 +132,9 @@ RUN git clone $build_repo
 WORKDIR /tmp/emhass
 #Branch
 RUN git checkout $build_branch
-RUN mkdir -p /app/src/emhass/
+RUN mkdir -p /app/src/emhass/data/
 RUN cp -r /tmp/emhass/src/emhass/. /app/src/emhass/
+RUN cp /tmp/emhass/src/emhass/data/*  /app/src/emhass/data/
 RUN cp /tmp/emhass/data/opt_res_latest.csv  /app/data/
 RUN cp /tmp/emhass/setup.py /app/
 RUN cp /tmp/emhass/README.md /app/
@@ -144,13 +145,14 @@ RUN pip3 install --no-cache-dir --break-system-packages --no-deps --force-reinst
 ENTRYPOINT [ "python3", "-m", "emhass.web_server","--addon", "True" , "--no_response", "True"]
 
 #-------------------------
-#EMHASS stanalone
+#EMHASS standalone
 FROM base as standalone
 
 COPY src/emhass/ /app/src/emhass/
 COPY src/emhass/templates/ /app/src/emhass/templates/
 COPY src/emhass/static/ /app/src/emhass/static/
 COPY src/emhass/static/img/ /app/src/emhass/static/img/
+COPY src/emhass/data/ /app/src/emhass/data/
 COPY data/opt_res_latest.csv /app/data/
 COPY README.md /app/
 COPY setup.py /app/
