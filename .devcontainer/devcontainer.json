@@ -3,24 +3,60 @@
 {
 	"name": "EMHASS",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
+		"dockerfile": "../Dockerfile",
+		"context": "../",
+		"args": { "TARGETARCH": "amd64"}
 	},
 	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
-	}
+			"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": "true"
+		}
+		// "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+	},
 	//"appPort": ["5000:5000"] //used to access app from external device (User discretion advised)
-	
-	
-	
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-	// Configure tool-specific properties.
-	// "customizations": {},
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+
+
+	// Security issue, may be needed for Podman
+	// "runArgs": [
+	// 	"--userns=keep-id",
+	// 	"--pid=host"
+	// ],
+	// "remoteUser": "root",
+	// "containerUser": "root",
+
+
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+		  // Add the IDs of extensions you want installed when the container is created.
+		  // can add "ms-python.mypy-type-checker"
+		  "extensions": [
+			"ms-python.debugpy",
+			"ms-python.python",
+			"charliermarsh.ruff",
+			"SonarSource.sonarlint-vscode",
+			"redhat.vscode-yaml",
+			"eamodio.gitlens",
+			"sourcery.sourcery"
+		],
+		  "settings": {
+			"[python]": {
+			  "editor.formatOnSave": true,
+			  "editor.codeActionsOnSave": {
+				"source.fixAll": "explicit",
+				"source.organizeImports": "explicit"
+			  },
+			  "editor.defaultFormatter": "charliermarsh.ruff",
+			  "gitlens.telemetry.enabled": false,
+			  "sonarlint.disableTelemetry": true,
+			  "telemetry.feedback.enabled": false
+			}
+		  }
+		}
+	  },
+
+	"postStartCommand": ["apt-get", "install", "nodejs", "-y"],
+	"updateContentCommand": ["apt-get", "update" ],
+	"postCreateCommand": [ "uv", "pip", "install", ".[test]" ]
+	  
 }

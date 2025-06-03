@@ -6,9 +6,10 @@
 # EMHASS: Energy Management for Home Assistant
 
 ```{image} images/emhass_logo.png
+
 ```
 
-Welcome to the documentation of EMHASS. With this package written in Python you will be able to implement a real Energy Management System for your household. This software was designed to be easy configurable and with a fast integration with Home Assistant: <https://www.home-assistant.io/>
+Welcome to the documentation of EMHASS. With this package written in Python, you will be able to implement a real Energy Management System for your household. This software was designed to be easily configurable and with a fast integration with Home Assistant: <https://www.home-assistant.io/>
 
 To get started go ahead and look at the installation procedure and usage instructions below.
 
@@ -21,6 +22,8 @@ differences.md
 lpems.md
 forecasts.md
 mlforecaster.md
+mlregressor.md
+thermal_model.md
 study_case.md
 config.md
 emhass.md
@@ -32,5 +35,3 @@ develop.md
 - {ref}`genindex`
 - {ref}`modindex`
 - {ref}`search`
-
-

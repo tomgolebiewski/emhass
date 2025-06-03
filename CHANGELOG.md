@@ -1,14 +1,241 @@
 # Changelog
 
-## Unreleased
+## 0.13.3 - 2025-05-02
+### Improvement
+- Enhance optimization solver capabilities by adding HiGHS solver, improving thread configuration, and updating solver support across the project (@Crosenhain)
+- Update spelling and extended some error messages to include more troubleshooting information (@kcoffau)
+### Fix
+- Fixed incorrect indentation in a for loop, leaving relevant constraints out of the optimisation (@purcell_lab)
+
+## 0.13.2 - 2025-04-29
+### Improvement
+- Improved README and development documentation (@Crosenhain and @gieljnssns)
+- Improved forecasting and optimization classes logging (@purcell_lab)
+### Fix
+- Fixed ML Regressor for correct time zone treatment (@gieljnssns)
+- Fixed long standing problem to allow thermal and standard loads to be scheduled (@purcell_lab)
+- Fixing Missing files in python package issue (@pail23)
+- Fixed improper handling of home assistant API errors (@Gruek)
+- Remove an extraneous comma in the pd.to_datetime() method call in retrieve_hass.py (@GeoDerp)
+- Fixed the SettingWithCopyWarning Pandas problem and PV sensor handling when set_use_adjusted_pv is false (@paulhomes)
+
+## 0.13.1 - 2025-04-21
+### Improvement
+- Add timeout and thread configuration for different LP solvers (CBC, GLPK, COIN). Thanks to @GeoDerp
+- Clean up actions and add sourcery scan action. Thanks to @GeoDerp
+- Cache Open-Meteo JSON reponse locally to reduce the number of API calls and add resilience. Thanks to @paulhomes
+### Fix
+- Update default weight battery value in config_defaults.json. Thanks to @purcell-lab
+- Fix forecast output assignment and avoid SettingWithCopyWarning. Thanks to @radim2tej
+- Fix for get_mix_forecast ValueError: cannot convert float NaN to integer. Thanks to @paulhomes
+- Fix for hard-coded actual/forecast PV sensor names. Thanks to @paulhomes
+- Update pyproject.toml to solve issue #495: Missing files in python package after 0.12.5. Thanks to @GeoDerp
+
+## 0.13.0 - 2025-04-02
+### Improvement
+- Added a new feature to automatically adjust PV forecast using historical actual/forecast data
+- Added Support for multiple days forecasting with CSV data. Thanks to @nielskool for this contribution!
+- Refactored a new method `retrieve_home_assistant_data` in `command_line`
+- Unified default training data for ML algorithms using `data/long_train_data.pkl`
+- Added a presentation stack using `marp`
+### Fix
+- Fixed Value has dtype incompatible with int64 error, issue #465
+- Fixed Runtime "delta_forecast_daily" not recognized, issue #479
+- Attempt to fix Missing files in python package after 0.12.5, issue #495
+- Fixed workflow for macos tests
+
+## 0.12.8 - 2025-02-27
+### Improvement
+- Added a new method for weather forecast: open-meteo. This offers a very nice API to obtain weather forecasts. We are dropping the old scrapper method, if you were using the scapper method you just need to change the Weather forecast method to open-meteo
+- Added support to `device_class` definition when posting sensors to HA. Thanks to @paulhomes for this contribution
+- Improved github workflow Python testing
+- Updated documentation
+### Fix
+- Fixed TZ shift issue when using the typical load power forecaster
+
+## 0.12.7 - 2025-02-16
+### Improvement
+- A first batch of improvements (code reliability) proposed by SonarQube
+### Fix
+- Added missing files to Dockerfile
+- Changes to the Dockerfile to make `/app/data` folder persistent. Thanks to @scruysberghs
+- Fixing errors with missing sensor `power_load_no_var_loads`. Thanks to @scruysberghs
+- Improved documentation and fixed automated testing for code quality. Thanks to @GeoDerp
+
+## 0.12.6 - 2025-02-09
+### Improvement
+- Improved warning message in case of wrong URL setting
+- Improved testing on typical load forecast method with different time steps
+### Fix
+- Solved missing file problem: data_load_cost_forecast.csv
+- Fixed warning issue on `findall` method
+
+## 0.12.5 - 2025-02-02
+### Improvement
+- Implemented new package manager uv resulting in faster builds. Thanks to @GeoDerp
+- Implemented SonarQube automatic code review. Thanks to @GeoDerp
+- Better management of SOC min/max to solve issue: MPC optim status infeasible when SOC lower than min SOC
+### Fix
+- Reverted back skforecast to latest version
+- Fixed issue with list index out of range. Thanks to @meks007 for identifying and reporting this
+
+## 0.12.4 - 2025-01-27
+### Patch fix
+- Fixed bugs on gunicorn logger and missing CBC modules
+
+## 0.12.3 - 2025-01-26
+### Improvement
+- PVLib DBs append custom EMHASS modules and inverters. Thanks to @GeoDerp
+- Added a `def_total_timestep` parameter (runtime only for now) that can be used instead of `def_total_hours` for passing timestep number instead of hour number. Thanks to @GeoDerp
+- Updated list of currencies in utils.py. Thanks to @BDVGitHub
+- Multiple roof_id support. Thanks to @radim2tej
+### Fix
+- Fix inconsistencies with Modules and Inverters from PVLib (thanks to help from @RafAustralia)
+- Fix issue with NAN sensors causing crash errors if incorrect (error handling) @purcell-lab
+- Fix Database path on optimization file (Thanks to @paulhomes for finding this issue)
+- Fixed weight_battery_charge sign problem. Thanks to @radim2tej
+- Fixed bug with out of index in list when retrieving config params from HA
+
+## 0.12.2 - 2025-01-01
+### Patch fix
+- Fixed Problem with calling weather-forecast-cache
+### Improvement
+- Updated readthedocs.yml, got rid of duplicated requirements.txt
+
+## 0.12.1 - 2024-12-30
+### Patch fix
+- Fixed error with retrieve config from HA
+
+## 0.12.0 - 2024-12-29
+### BREAKING CHANGE
+- The solar PV system is now optional. If you have a PV system then use the switch on the webui or set the `set_use_pv` parameter to `True`
+### Improvement
+- A new load power forecast method based on statistic and typical household load power consumption. This and the optional PV, will make it easier for new users to on-board EMHASS because this new default behavior does not require any data retrieval from Home Assistant or any other external source
+- Updated documentation
+
+## 0.11.4 - 2024-12-24
+### Fix
+- Fix bug when treating runtime params, fix optimization_time_step timedelta 
+
+## 0.11.3 - 2024-12-23
+### Improvement
+- Runtime parameters now support all config parameters
+- Adopted the Ruff code fomatting
+- Added a Github Actions for Google OSV security code scan 
+- Updated the param_definitions.json 
+- Bump skforecast from 0.13.0 to 0.14.0. This needed upgrading a bunch of deprecated options. Notably skforcast now uses the time series cross-validation object (cv) from sklearn 
+### Fix
+- Updated the default battery optimization weights
+- Fix publish_data defaulting to opt_res_latest, tweak warning logs
+- Added MLForecaster options to load_forecast_method for param_definitions.json
+
+## 0.11.2 - 2024-10-31
+### Improvement
+- Added support to retrieve HA configuration. This will be used in the future to automatically retrieve some parameters as the currency
+### Fix
+- utils fix runtime parameter merge bugs 
+- configuration_script.js fix placeholder value bug 
+
+## 0.11.1 - 2024-10-29
+### Fix
+- Fix parameter saving and duplicate battery bugs 
+- utils.py add more specific logging information for config 
+- Fix issue where thermal runtime parameters were not being propagated into optim_conf 
+
+## 0.11.0 - 2024-10-25
+
+This version marks huge improvement works by @GeoDerp aiming to simplfy the intial and normal setup of EMHASS. The workflow for setting the EMHASS configuration regardless of the installation method has now been centralized on the single `config.json` file. The webserver has now a configuration tab that can be used to to modify and save the `config.json` file.
+
+The complete discussion of the changes on this thread:
+[https://github.com/davidusb-geek/emhass/pull/334](https://github.com/davidusb-geek/emhass/pull/334)
+
+### Automatic version bot improvements
+- Bump h5py from 3.11.0 to 3.12.1
+- Bump markupsafe from 2.1.5 to 3.0.2
+
+### Fix
+- Revert to myst-parser==3.0.1 to solve documentation compilation failures
+
+## 0.10.6 - 2024-07-14
+### Fix
+- Fixed bug on predicted room temeprature publish, wrong key on DataFrame
+
+## 0.10.5 - 2024-07-12
+### Improvement
+- Added support for pubishing thermal load data, namely the predicted room temperature
+
+## 0.10.4 - 2024-07-10
+### Improvement
+- Added a new thermal modeling, see the new section in the documentation for help to implement this of model for thermal deferrable loads
+- Improved documentation
+
+## 0.10.3 - 2024-07-06
+### Improvement
+- Added improved support for `def_start_penalty` option
+- Improved documentation
+
+## 0.10.2 - 2024-07-06
+### Improvement
+- Weather forecast caching and Solcast method fix by @GeoDerp
+- Added a new configuration parameter to control wether we compute PV curtailment or not
+- Added hybrid inverter to data publish
+- It is now possible to pass these battery parameters at runtime: `SOCmin`, `SOCmax`, `Pd_max` and `Pc_max`
+### Fix
+- Fixed problem with negative PV forecast values in optimization.py, by @GeoDerp
+
+## 0.10.1 - 2024-06-03
+### Fix
+- Fixed PV curtailment maximum possible value constraint
+- Added PV curtailement to variable to publish to HA
+
+## 0.10.0 - 2024-06-02
+### BREAKING CHANGE
+- In this new version we have added support for PV curtailment computation. While doing this the nominal PV peak power is needed. The easiest way find this information is by directly using the `inverter_model` defined in the configuration. As this is needed in the optimization to correctly compute PV curtailment, this parameter need to be properly defined for your installation. Before this chage this parameter was only needed if using the PV forecast method `scrapper`, but now it is not optional as it is directly used in the optimization. 
+Use the dedicated webapp to find the correct model for your inverter, if you cannot find your exact brand/model then just pick an inverter with the same nominal power as yours: [https://emhass-pvlib-database.streamlit.app/](https://emhass-pvlib-database.streamlit.app/)
+### Improvement
+- Added support for hybrid inverters and PV curtailment computation
+- Implemented a new `continual_publish` service that avoid the need of setting a special automation for data publish. Thanks to @GeoDerp
+- Implement a deferrable load start penalty functionality. Thanks to @werdnum
+  - This feature also implement a `def_current_state` that can be passed at runtime to let the optimization consider that a deferrable load is currently scheduled or under operation when launching the optimization task
+### Fix
+- Fixed forecast methods to treat delta_forecast higher than 1 day
+- Fixed solar.forecast wrong interpolation of nan values
+
+## 0.9.1 - 2024-05-13
+### Fix
+- Fix patch for issue with paths to modules and inverters database
+- Fixed code formatting, or at least trying to keep a unique format
+
+## 0.9.0 - 2024-05-10
+### Improvement
+- On this new version we now have a new method to train a regression model using Scikit-Learn methods. This is the contribution of @gieljnssns. Check the dedicated section the documentation to this new feature: [https://emhass.readthedocs.io/en/latest/mlregressor.html](https://emhass.readthedocs.io/en/latest/mlregressor.html)
+- Again another bunch of nice improvements by @GeoDerp:
+  - Added Dictionary var containing EMHASS paths
+  - MLForcaster error suppression
+  - Add `freq` as runtime parameter
+  - Improved documentation added README buttons
+- Bumping dependencies:
+  - Bump h5py from 3.10.0 to 3.11.0
+  - Bump myst-parser from 2.0.0 to 3.0.1
+  - Bump skforecast from 0.11.0 to 0.12.0
+
+## 0.8.6 - 2024-04-07
+### Fix
+- Fixed bug from forecast out method related to issue 240
+- Fix patch for some issues with package file paths
+
+## 0.8.5 - 2024-04-01
 ### Improvement
 - Simplified fetch urls to relatives
 - Improved code for passed forecast data error handling in utils.py
 - Added new tests for forecast longer than 24h by changing parameter `delta_forecast`
-- Added new files for updated PV modules and inverters using PVLib
+- Added new files for updated PV modules and inverters database for use with PVLib
+- Added a new webapp to help configuring modules and inverters: [https://emhass-pvlib-database.streamlit.app/](https://emhass-pvlib-database.streamlit.app/)
+- Added a new `P_to_grid_max` variable, different from the current `P_from_grid_max` option
 ### Fix
 - style.css auto format and adjusted table styling
 - Changed pandas datetime rounding to nonexistent='shift_forward' to help survive DST change
+- Dropped support for Python 3.9
 
 ## 0.8.4 - 2024-03-13
 ### Improvement

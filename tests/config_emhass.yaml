@@ -1,5 +1,4 @@
-# Configuration file for EMHASS
-
+# Legacy YAML Configuration file for EMHASS Tests
 retrieve_hass_conf:
   freq: 30 # The time step to resample retrieved data from hass in minutes
   days_to_retrieve: 2 # We will retrieve data from now and up to days_to_retrieve days
@@ -13,6 +12,7 @@ retrieve_hass_conf:
   - 'sensor.power_photovoltaics'
   - 'sensor.power_load_no_var_loads'
   method_ts_round: 'nearest' # Set the method for timestamp rounding, options are: first, last and nearest
+  continual_publish: False # Save published sensor data and check for state change every freq minutes
 
 optim_conf:
   set_use_battery: False # consider a battery storage
@@ -36,6 +36,9 @@ optim_conf:
   set_def_constant: # set as a constant fixed value variable with just one startup for each 24h
   - False
   - False
+  def_start_penalty: # Set a penalty for each start up of a deferrable load
+  - 0.0
+  - 0.0
   weather_forecast_method: 'scrapper' # options are 'scrapper', 'csv', 'list', 'solcast' and 'solar.forecast'
   load_forecast_method: 'naive' # options are 'csv' to load a custom load forecast from a CSV file or 'naive' for a persistance model
   load_cost_forecast_method: 'hp_hc_periods' # options are 'hp_hc_periods' for peak and non-peak hours contracts and 'csv' to load custom cost from CSV file 
@@ -51,7 +54,7 @@ optim_conf:
   prod_price_forecast_method: 'constant' # options are 'constant' for constant fixed value or 'csv' to load custom price forecast from a CSV file
   prod_sell_price: 0.065 # power production selling price in €/kWh (only needed if prod_price_forecast_method='constant')
   set_total_pv_sell: False # consider that all PV power is injected to the grid (self-consumption with total sell)
-  lp_solver: 'default' # set the name of the linear programming solver that will be used. Options are 'PULP_CBC_CMD', 'GLPK_CMD' and 'COIN_CMD'. 
+  lp_solver: 'default' # set the name of the linear programming solver that will be used. Options are 'PULP_CBC_CMD', 'GLPK_CMD', 'HiGHS', and 'COIN_CMD'.
   lp_solver_path: 'empty' # set the path to the LP solver, COIN_CMD default is /usr/bin/cbc
   set_nocharge_from_grid: False # avoid battery charging from the grid
   set_nodischarge_to_grid: True # avoid battery discharging to the grid
@@ -62,7 +65,8 @@ optim_conf:
   weight_battery_charge: 0.0 # weight applied in cost function to battery usage for charge
 
 plant_conf:
-  P_grid_max: 9000 # The maximum power that can be supplied by the utility grid in Watts
+  P_from_grid_max: 9000 # The maximum power that can be supplied by the utility grid in Watts
+  P_to_grid_max: 9000 # The maximum power that can be supplied to the utility grid in Watts
   module_model: # The PV module model
   - 'CSUN_Eurasia_Energy_Systems_Industry_and_Trade_CSUN295_60M'
   inverter_model: # The PV inverter model
@@ -75,6 +79,8 @@ plant_conf:
   - 16 
   strings_per_inverter: # The number of used strings per inverter
   - 1
+  inverter_is_hybrid: False # Set if it is a hybrid inverter (PV+batteries) or not
+  compute_curtailment: False # Compute a PV curtailment variable or not
   Pd_max: 1000 # If your system has a battery (set_use_battery=True), the maximum discharge power in Watts
   Pc_max: 1000 # If your system has a battery (set_use_battery=True), the maximum charge power in Watts
   eta_disch: 0.95 # If your system has a battery (set_use_battery=True), the discharge efficiency
